@@ -1,4 +1,5 @@
 import 'package:flutter_chat_types/flutter_chat_types.dart';
+import 'package:gemini_app/config/gemini/gemini_impl.dart';
 import 'package:gemini_app/presentation/providers/chat/is_gemini_writing.dart';
 import 'package:gemini_app/presentation/providers/users/user_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,8 +9,12 @@ part 'basic_chat.g.dart';
 
 @riverpod
 class BasicChat extends _$BasicChat {
+  final gemini = GeminiImpl();
+  late User geminiUser;
+
   @override
   List<Message> build() {
+    geminiUser = ref.read(geminiUserProvider);
     return [];
   }
 
@@ -19,26 +24,30 @@ class BasicChat extends _$BasicChat {
   }
 
   void _addTextMessage(PartialText partialText, User author) {
-    final message = TextMessage(
-      id: const Uuid().v4(),
-      author: author,
-      text: partialText.text,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-    );
-    state = [message, ...state];
+    _createTextMessage(partialText.text, author);
     _geminiTextResponse(partialText.text);
   }
 
   void _geminiTextResponse(String prompt) async {
+    _setGeminiWritingStatus(true);
+    final resp = await gemini.getResponse(prompt);
+    _setGeminiWritingStatus(false);
+    _createTextMessage(resp, geminiUser);
+  }
+
+  //Helpers methods
+  void _setGeminiWritingStatus(bool isWriting) {
     final isGeminiWriting = ref.read(isGeminiWritingProvider.notifier);
-    final geminiUser = ref.read(geminiUserProvider);
-    isGeminiWriting.setIsGeminiWriting();
-    await Future.delayed(const Duration(seconds: 2));
-    isGeminiWriting.setNotGeminiWriting();
+    isWriting
+        ? isGeminiWriting.setIsGeminiWriting()
+        : isGeminiWriting.setNotGeminiWriting();
+  }
+
+  void _createTextMessage(String text, User author) {
     final message = TextMessage(
-      author: geminiUser,
       id: const Uuid().v4(),
-      text: 'This is a response to: $prompt',
+      author: author,
+      text: text,
       createdAt: DateTime.now().millisecondsSinceEpoch,
     );
     state = [message, ...state];
