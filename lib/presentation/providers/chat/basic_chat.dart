@@ -25,7 +25,8 @@ class BasicChat extends _$BasicChat {
 
   void _addTextMessage(PartialText partialText, User author) {
     _createTextMessage(partialText.text, author);
-    _geminiTextResponse(partialText.text);
+    // _geminiTextResponse(partialText.text);
+    _geminiTextResponseStream(partialText.text);
   }
 
   void _geminiTextResponse(String prompt) async {
@@ -33,6 +34,21 @@ class BasicChat extends _$BasicChat {
     final resp = await gemini.getResponse(prompt);
     _setGeminiWritingStatus(false);
     _createTextMessage(resp, geminiUser);
+  }
+
+  void _geminiTextResponseStream(String prompt) async {
+
+    _createTextMessage('Gemini is thinking...', geminiUser);
+    gemini.getResponseStream(prompt).listen((responseChunk) {
+      if(responseChunk.isEmpty) return;
+      final updatedMessages = [...state];
+      final updatedMessage = (updatedMessages.first as TextMessage).copyWith(text: responseChunk);
+
+      if (updatedMessages.isNotEmpty) {
+        updatedMessages[0] = updatedMessage;
+        state = updatedMessages;
+      }
+    });
   }
 
   //Helpers methods
