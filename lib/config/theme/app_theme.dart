@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+const seedColor = Color(0xFF1E1C36);
+
 class AppTheme {
   final bool isDarkMode;
   AppTheme({required this.isDarkMode});
 
   ThemeData getTheme() => ThemeData(
-    colorSchemeSeed: Color(0xFF1E1C36),
+    colorSchemeSeed: seedColor,
     brightness: isDarkMode ? Brightness.dark : Brightness.light,
     useMaterial3: true,
     listTileTheme: ListTileThemeData(
@@ -16,7 +18,7 @@ class AppTheme {
     ),
     appBarTheme: AppBarTheme(
       centerTitle: true,
-      backgroundColor:  Color(0xFF1E1C36),
+      backgroundColor:  seedColor,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
     ),
