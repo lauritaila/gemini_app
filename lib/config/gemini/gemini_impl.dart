@@ -54,4 +54,45 @@ class GeminiImpl {
       yield 'Error: Could not get response from Gemini.';
     }
   }
+
+  Stream<String> getChatStream(
+    String prompt, 
+    String chatId,
+    {
+    List<XFile> files = const [],
+  }) async* {
+    try {
+      final formData = FormData();
+      formData.fields.add(MapEntry('prompt', prompt));
+      formData.fields.add(MapEntry('chatId', chatId));
+      if (files.isNotEmpty) {
+        for (XFile file in files) {
+          formData.files.add(
+            MapEntry(
+              'files',
+              await MultipartFile.fromFile(file.path, filename: file.name),
+            ),
+          );
+        }
+      }
+
+      final response = await _dio.post(
+        '/chat-stream',
+        data: formData,
+        options: Options(responseType: ResponseType.stream),
+      );
+
+      final stream = response.data.stream as Stream<List<int>>;
+      String buffer = "";
+
+      await for (var chunk in stream) {
+        final chunkString = utf8.decode(chunk, allowMalformed: true);
+        buffer += chunkString;
+        yield buffer;
+      }
+    } catch (e) {
+      print(e);
+      yield 'Error: Could not get response from Gemini.';
+    }
+  }
 }
