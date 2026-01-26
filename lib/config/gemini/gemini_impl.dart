@@ -21,38 +21,11 @@ class GeminiImpl {
     String prompt, {
     List<XFile> files = const [],
   }) async* {
-    try {
-      final formData = FormData();
-      formData.fields.add(MapEntry('prompt', prompt));
-      if (files.isNotEmpty) {
-        for (XFile file in files) {
-          formData.files.add(
-            MapEntry(
-              'files',
-              await MultipartFile.fromFile(file.path, filename: file.name),
-            ),
-          );
-        }
-      }
-
-      final response = await _dio.post(
-        '/basic-prompt-stream',
-        data: formData,
-        options: Options(responseType: ResponseType.stream),
-      );
-
-      final stream = response.data.stream as Stream<List<int>>;
-      String buffer = "";
-
-      await for (var chunk in stream) {
-        final chunkString = utf8.decode(chunk, allowMalformed: true);
-        buffer += chunkString;
-        yield buffer;
-      }
-    } catch (e) {
-      print(e);
-      yield 'Error: Could not get response from Gemini.';
-    }
+    yield* _getStreamedResponse(
+      prompt: prompt,
+      endpoint: '/basic-prompt-stream',
+      files: files,
+    );
   }
 
   Stream<String> getChatStream(
@@ -61,10 +34,29 @@ class GeminiImpl {
     {
     List<XFile> files = const [],
   }) async* {
+    yield* _getStreamedResponse(
+      prompt: prompt,
+      endpoint: '/chat-stream',
+      formFields: {'chat_id': chatId},
+      files: files,
+    );
+  }
+
+  //emmit stream if information
+  Stream<String> _getStreamedResponse({
+    required String prompt,
+    required String endpoint,
+    Map<String, dynamic> formFields = const {},
+    List<XFile> files = const [],
+  }) async* {
     try {
+
       final formData = FormData();
       formData.fields.add(MapEntry('prompt', prompt));
-      formData.fields.add(MapEntry('chatId', chatId));
+      for(final entry in formFields.entries){
+        formData.fields.add(MapEntry(entry.key, entry.value));
+      }
+
       if (files.isNotEmpty) {
         for (XFile file in files) {
           formData.files.add(
@@ -77,7 +69,7 @@ class GeminiImpl {
       }
 
       final response = await _dio.post(
-        '/chat-stream',
+        endpoint,
         data: formData,
         options: Options(responseType: ResponseType.stream),
       );
@@ -91,7 +83,6 @@ class GeminiImpl {
         yield buffer;
       }
     } catch (e) {
-      print(e);
       yield 'Error: Could not get response from Gemini.';
     }
   }
