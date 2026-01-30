@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'chat_with_context.dart';
+part of 'generated_images_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,52 +9,52 @@ part of 'chat_with_context.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(ChatWithContext)
-const chatWithContextProvider = ChatWithContextProvider._();
+@ProviderFor(GeneratedImages)
+const generatedImagesProvider = GeneratedImagesProvider._();
 
-final class ChatWithContextProvider
-    extends $NotifierProvider<ChatWithContext, List<Message>> {
-  const ChatWithContextProvider._()
+final class GeneratedImagesProvider
+    extends $NotifierProvider<GeneratedImages, List<String>> {
+  const GeneratedImagesProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'chatWithContextProvider',
+        name: r'generatedImagesProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$chatWithContextHash();
+  String debugGetCreateSourceHash() => _$generatedImagesHash();
 
   @$internal
   @override
-  ChatWithContext create() => ChatWithContext();
+  GeneratedImages create() => GeneratedImages();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<Message> value) {
+  Override overrideWithValue(List<String> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<Message>>(value),
+      providerOverride: $SyncValueProvider<List<String>>(value),
     );
   }
 }
 
-String _$chatWithContextHash() => r'465d4ba3c85c2aa6c01e7f22ef79a160d3f5b536';
+String _$generatedImagesHash() => r'92b087aae458faa89bdb5c3b6a0817b5798b433a';
 
-abstract class _$ChatWithContext extends $Notifier<List<Message>> {
-  List<Message> build();
+abstract class _$GeneratedImages extends $Notifier<List<String>> {
+  List<String> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<List<Message>, List<Message>>;
+    final ref = this.ref as $Ref<List<String>, List<String>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<List<Message>, List<Message>>,
-              List<Message>,
+              AnyNotifier<List<String>, List<String>>,
+              List<String>,
               Object?,
               Object?
             >;

@@ -6,6 +6,8 @@ import 'package:image_picker/image_picker.dart';
 
 class GeminiImpl {
   final Dio _dio = Dio(BaseOptions(baseUrl: dotenv.env['ENDPOINT_API'] ?? ''));
+
+
   Future<String> getResponse(String prompt) async {
     try {
       final body = jsonEncode({'prompt': prompt});
@@ -84,6 +86,33 @@ class GeminiImpl {
       }
     } catch (e) {
       yield 'Error: Could not get response from Gemini.';
+    }
+  }
+
+   Future<String?> generateImage(String prompt, {List<XFile> files = const []}) async {
+    final formData = FormData();
+    formData.fields.add(MapEntry('prompt', prompt));
+
+    if (files.isNotEmpty) {
+      for (XFile file in files) {
+        formData.files.add(
+          MapEntry(
+            'files',
+            await MultipartFile.fromFile(file.path, filename: file.name),
+          ),
+        );
+      }
+    }
+
+    try {
+      final response = await _dio.post(
+        '/image-generation',
+        data: formData,
+      );
+      return response.data['imageUrl'];
+    } catch (e) {
+      print(e);
+      return null;
     }
   }
 }
