@@ -4,7 +4,9 @@ import 'package:gemini_app/config/theme/app_theme.dart';
 import 'package:gemini_app/presentation/providers/image/generated_images_provider.dart';
 import 'package:gemini_app/presentation/providers/image/is_generating_provider.dart';
 import 'package:gemini_app/presentation/providers/image/selected_art_provider.dart';
+import 'package:gemini_app/presentation/providers/image/selected_image_provider.dart';
 import 'package:gemini_app/presentation/widgets/chat/custom_bottom_input.dart';
+import 'package:gemini_app/presentation/widgets/images/history_grid.dart';
 import 'package:image_picker/image_picker.dart';
 
 const imageArtStyles = [
@@ -35,12 +37,19 @@ class ImagePlaygroundScreen extends ConsumerWidget {
           // Selector de estilo de arte
           ArtStyleSelector(),
           // Llenar el espacio
-          Expanded(child: Container()),
+          Expanded(child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: HistoryGrid(),
+          )),
           // Espacio para el prompt
           CustomBottomInput(
-            onSend: (partialText, {List<XFile> images = const []}) {
+            onSend: (partialText, {List<XFile> images = const []}) async{
               final  generatedImagesNotifier = ref.read(generatedImagesProvider.notifier);
               final selectedArtStyle = ref.read(selectedArtStyleProvider);
+              final selectedImage = await ref.read(selectedImageProvider.notifier).getXFiles();
+              if(selectedImage != null){
+                images.add(selectedImage);
+              }
               String promptWithStyle = partialText.text;
               generatedImagesNotifier.clearImages();
               if (selectedArtStyle.isNotEmpty) {

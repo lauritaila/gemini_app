@@ -109,7 +109,9 @@ class GeminiImpl {
         '/image-generation',
         data: formData,
       );
-      return response.data['imageUrl'];
+      final imageUrl = response.data['imageUrl'];
+      if(imageUrl == null || imageUrl == "") return null;
+      return imageUrl;
     } catch (e) {
       print(e);
       return null;

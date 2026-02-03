@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'generated_history_provider.dart';
+part of 'selected_image_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,52 +9,52 @@ part of 'generated_history_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(GeneratedHistory)
-const generatedHistoryProvider = GeneratedHistoryProvider._();
+@ProviderFor(SelectedImage)
+const selectedImageProvider = SelectedImageProvider._();
 
-final class GeneratedHistoryProvider
-    extends $NotifierProvider<GeneratedHistory, dynamic> {
-  const GeneratedHistoryProvider._()
+final class SelectedImageProvider
+    extends $NotifierProvider<SelectedImage, String?> {
+  const SelectedImageProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'generatedHistoryProvider',
+        name: r'selectedImageProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$generatedHistoryHash();
+  String debugGetCreateSourceHash() => _$selectedImageHash();
 
   @$internal
   @override
-  GeneratedHistory create() => GeneratedHistory();
+  SelectedImage create() => SelectedImage();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(dynamic value) {
+  Override overrideWithValue(String? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<dynamic>(value),
+      providerOverride: $SyncValueProvider<String?>(value),
     );
   }
 }
 
-String _$generatedHistoryHash() => r'bbc3b2965fc6ea9acbaf9374474e9acd09fb131c';
+String _$selectedImageHash() => r'23b9725133166f1ef45abc5003b03d30012b8edc';
 
-abstract class _$GeneratedHistory extends $Notifier<dynamic> {
-  dynamic build();
+abstract class _$SelectedImage extends $Notifier<String?> {
+  String? build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<dynamic, dynamic>;
+    final ref = this.ref as $Ref<String?, String?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<dynamic, dynamic>,
-              dynamic,
+              AnyNotifier<String?, String?>,
+              String?,
               Object?,
               Object?
             >;
